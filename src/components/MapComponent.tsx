@@ -274,13 +274,15 @@ export default function MapComponent({
       if (existingLayer) {
         // Update styling of existing layer (if color, opacity, or weight changed)
         try {
+          const isHollow = layerConf.type === "polygon" || layerConf.type === "linestring";
           existingLayer.setStyle({
             color: layerConf.color,
-            fillColor: layerConf.fillColor || layerConf.color,
+            fillColor: "transparent",
             weight: layerConf.weight,
             opacity: layerConf.opacity,
-            fillOpacity: layerConf.fillOpacity * layerConf.opacity,
-          });
+            fillOpacity: isHollow ? 0 : (layerConf.fillOpacity * layerConf.opacity),
+            fill: !isHollow,
+          } as any);
         } catch (styleErr) {
           console.warn(`Could not update style for existing layer ${layerConf.name}:`, styleErr);
         }
@@ -313,12 +315,14 @@ export default function MapComponent({
         const geoJsonLayer = L.geoJSON(geoJsonData, {
           interactive: measureMode === "none",
           style: (feature: any) => {
+            const isHollow = layerConf.type === "polygon" || layerConf.type === "linestring";
             return {
               color: layerConf.color,
-              fillColor: layerConf.fillColor || layerConf.color,
+              fillColor: "transparent",
               weight: layerConf.weight,
               opacity: layerConf.opacity,
-              fillOpacity: layerConf.fillOpacity * layerConf.opacity,
+              fillOpacity: isHollow ? 0 : (layerConf.fillOpacity * layerConf.opacity),
+              fill: !isHollow,
             };
           },
           pointToLayer: (feature: any, latlng: L.LatLng) => {

@@ -5,6 +5,10 @@ const UTM_44N = "+proj=utm +zone=44 +ellps=WGS84 +datum=WGS84 +units=m +no_defs"
 const WGS_84 = "+proj=longlat +datum=WGS84 +no_defs";
 const utmConverter = proj4(UTM_44N, WGS_84);
 
+const MONGODB_URI = process.env.MONGODB_URI;
+const MONGODB_DB = process.env.MONGODB_DB;
+const MONGODB_COLLECTION = process.env.MONGODB_COLLECTION;
+
 async function run() {
   console.log("Projected test point [409985.45, 3203378.28]:", utmConverter.forward([409985.45, 3203378.28]));
   const client = new MongoClient(MONGODB_URI);

@@ -380,15 +380,23 @@ export default function Sidebar({
       {/* Sub-controls: Color & Opacity (only when layer is enabled) */}
       {layer.visible && (
         <div className="flex items-center gap-3 pl-8 pb-1 pt-0.5">
-          {/* Color Picker Indicator */}
-          <div className="flex items-center gap-1 shrink-0">
+          {/* Color Picker Indicator & Text input for hex styling */}
+          <div className="flex items-center gap-1 shrink-0 bg-white border border-slate-200 rounded px-1.5 py-0.5 shadow-sm">
             <input
               type="color"
               id={`color-${layer.id}`}
+              value={layer.color.startsWith("#") && layer.color.length === 7 ? layer.color : "#6366f1"}
+              onChange={(e) => updateLayerColor(layer.id, e.target.value)}
+              className="w-4 h-4 rounded cursor-pointer border-none p-0 block bg-transparent shrink-0"
+              title="Select color from palette"
+            />
+            <input
+              type="text"
               value={layer.color}
               onChange={(e) => updateLayerColor(layer.id, e.target.value)}
-              className="w-4 h-4 rounded cursor-pointer border border-slate-300 p-0 block bg-transparent"
-              title="Change layer color"
+              placeholder="#hex"
+              className="w-16 bg-transparent text-[10px] font-mono text-slate-700 outline-none border-none p-0 focus:ring-0 focus:outline-none"
+              title="Type custom color hex"
             />
           </div>
 
