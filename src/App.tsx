@@ -4,6 +4,7 @@ import Sidebar from "./components/Sidebar";
 import MapComponent from "./components/MapComponent";
 import AttributeTable from "./components/AttributeTable";
 import Login from "./components/Login";
+import ThemeToggle from "./components/ThemeToggle";
 import { 
   Database, 
   Layers, 
@@ -18,9 +19,7 @@ import {
   Info,
   ServerCrash,
   RefreshCw,
-  LogOut,
-  Sun,
-  Moon
+  LogOut
 } from "lucide-react";
 
 export default function App() {
@@ -391,17 +390,10 @@ function hslToHex(h: number, s: number, l: number): string {
         {/* Global summary specs */}
         <div className="flex items-center space-x-2.5 text-xs font-semibold">
           {/* Theme Toggle Icon Button */}
-          <button
-            onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-            className="p-1.5 rounded-lg border transition duration-150 cursor-pointer flex items-center justify-center bg-slate-800 hover:bg-slate-700 border-slate-700 text-slate-200 shadow-sm"
-            title={theme === "light" ? "Switch to Dark Theme" : "Switch to Light Theme"}
-          >
-            {theme === "light" ? (
-              <Moon className="w-4 h-4 text-slate-300" />
-            ) : (
-              <Sun className="w-4 h-4 text-amber-400" />
-            )}
-          </button>
+          <ThemeToggle
+            theme={theme}
+            onToggle={() => setTheme(theme === "light" ? "dark" : "light")}
+          />
 
           <button
             onClick={() => fetchFeatures(true)}
