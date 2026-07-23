@@ -2,7 +2,7 @@
 
 An interactive, map-based portal for **Champawat District**, built with React, TypeScript and Leaflet. The app lets citizens and administrators explore geospatial data, layers, and district information through a fast, modern web interface.
 
-> **Live demo:** https://district-champawat.onrender.com/
+> **Live demo:** https://district-champawat.onrender.com
 
 ---
 
