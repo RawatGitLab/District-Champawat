@@ -10,6 +10,7 @@ interface AttributeTableProps {
   isCollapsed: boolean;
   setIsCollapsed: (collapsed: boolean) => void;
   onRefresh?: () => void;
+  theme?: "light" | "dark";
 }
 
 export default function AttributeTable({
@@ -19,7 +20,8 @@ export default function AttributeTable({
   onFeatureSelect,
   isCollapsed,
   setIsCollapsed,
-  onRefresh
+  onRefresh,
+  theme = "light"
 }: AttributeTableProps) {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [isFormCollapsed, setIsFormCollapsed] = useState<boolean>(true);
@@ -178,15 +180,25 @@ export default function AttributeTable({
 
   if (isCollapsed) {
     return (
-      <div className="w-12 border-l border-slate-200 bg-white flex flex-col items-center pt-16 pb-4 shrink-0 transition-all duration-300">
+      <div className={`w-12 border-l flex flex-col items-center pt-16 pb-4 shrink-0 transition-all duration-300 ${
+        theme === "light"
+          ? "border-slate-200 bg-white text-slate-800"
+          : "border-slate-800 bg-slate-900 text-slate-100"
+      }`}>
         <button
           onClick={() => setIsCollapsed(false)}
           title="Open Attribute Table"
-          className="p-2 text-slate-600 hover:text-indigo-600 rounded-md hover:bg-indigo-50 border border-slate-200 bg-slate-50 shadow-sm transition duration-150 mt-4 mb-8"
+          className={`p-2 rounded-md border shadow-sm transition duration-150 mt-4 mb-8 cursor-pointer ${
+            theme === "light"
+              ? "text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 border-slate-200 bg-slate-50"
+              : "text-slate-300 hover:text-indigo-400 hover:bg-slate-800 border-slate-700 bg-slate-800"
+          }`}
         >
           <Maximize2 className="w-4 h-4" />
         </button>
-        <div className="vertical-text text-[10px] uppercase font-bold tracking-widest text-slate-400 font-sans select-none whitespace-nowrap origin-center rotate-90 mt-16 leading-none flex items-center gap-2">
+        <div className={`vertical-text text-[10px] uppercase font-bold tracking-widest font-sans select-none whitespace-nowrap origin-center rotate-90 mt-16 leading-none flex items-center gap-2 ${
+          theme === "light" ? "text-slate-400" : "text-slate-500"
+        }`}>
           <Table className="w-4 h-4" />
           Attribute Table
         </div>
@@ -195,15 +207,23 @@ export default function AttributeTable({
   }
 
   return (
-    <div className="w-[450px] border-l border-slate-200 bg-white flex flex-col h-full shrink-0 shadow-sm font-sans transition-all duration-300">
+    <div className={`w-[450px] border-l flex flex-col h-full shrink-0 shadow-sm font-sans transition-all duration-300 ${
+      theme === "light"
+        ? "border-slate-200 bg-white text-slate-800"
+        : "border-slate-800 bg-slate-900 text-slate-100"
+    }`}>
       {/* Table Header Controls */}
-      <div className="p-4 border-b border-slate-200 bg-white space-y-3">
+      <div className={`p-4 border-b space-y-3 ${
+        theme === "light"
+          ? "border-slate-200 bg-white"
+          : "border-slate-800 bg-slate-900"
+      }`}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Table className="w-5 h-5 text-indigo-600" />
             <div>
-              <h2 className="text-sm font-bold text-slate-800 leading-none">Attribute Table</h2>
-              <p className="text-[10px] text-slate-400 mt-0.5">Explore feature details, properties, and stats</p>
+              <h2 className={`text-sm font-bold leading-none ${theme === "light" ? "text-slate-800" : "text-slate-100"}`}>Attribute Table</h2>
+              <p className={`text-[10px] mt-0.5 ${theme === "light" ? "text-slate-400" : "text-slate-400"}`}>Explore feature details, properties, and stats</p>
             </div>
           </div>
           <div className="flex items-center gap-1.5">

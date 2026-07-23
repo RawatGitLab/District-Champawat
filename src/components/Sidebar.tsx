@@ -16,6 +16,7 @@ interface SidebarProps {
   setIsCollapsed: (collapsed: boolean) => void;
   onZoomToLayer: (name: string) => void;
   toggleAllLayers: (visible: boolean) => void;
+  theme?: "light" | "dark";
   
   // Measurement state passing
   measureMode: "none" | "distance" | "area";
@@ -78,6 +79,7 @@ export default function Sidebar({
   setIsCollapsed,
   onZoomToLayer,
   toggleAllLayers,
+  theme = "light",
   measureMode,
   setMeasureMode,
   measurePoints,
@@ -491,15 +493,25 @@ export default function Sidebar({
 
   if (isCollapsed) {
     return (
-      <aside className="w-12 border-r border-slate-200 bg-slate-50 flex flex-col items-center pt-16 pb-4 h-full shrink-0 shadow-sm font-sans transition-all duration-300">
+      <aside className={`w-12 border-r flex flex-col items-center pt-16 pb-4 h-full shrink-0 shadow-sm font-sans transition-all duration-300 ${
+        theme === "light"
+          ? "bg-slate-50 border-slate-200 text-slate-800"
+          : "bg-slate-900 border-slate-800 text-slate-100"
+      }`}>
         <button
           onClick={() => setIsCollapsed(false)}
           title="Open Map Controller"
-          className="p-2 text-slate-600 hover:text-indigo-600 rounded-md hover:bg-indigo-50 border border-slate-200 bg-white shadow-sm transition duration-150 mt-4 mb-8 cursor-pointer"
+          className={`p-2 rounded-md border shadow-sm transition duration-150 mt-4 mb-8 cursor-pointer ${
+            theme === "light"
+              ? "text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 border-slate-200 bg-white"
+              : "text-slate-300 hover:text-indigo-400 hover:bg-slate-800 border-slate-700 bg-slate-800/80"
+          }`}
         >
           <Maximize2 className="w-4 h-4" />
         </button>
-        <div className="vertical-text text-[10px] uppercase font-bold tracking-widest text-slate-400 font-sans select-none whitespace-nowrap origin-center rotate-90 mt-16 leading-none flex items-center gap-1.5">
+        <div className={`vertical-text text-[10px] uppercase font-bold tracking-widest font-sans select-none whitespace-nowrap origin-center rotate-90 mt-16 leading-none flex items-center gap-1.5 ${
+          theme === "light" ? "text-slate-400" : "text-slate-500"
+        }`}>
           <Database className="w-3.5 h-3.5 text-indigo-500 shrink-0" />
           Basemaps & Layers
         </div>
@@ -508,14 +520,22 @@ export default function Sidebar({
   }
 
   return (
-    <aside className="w-80 border-r border-slate-200 bg-slate-50 flex flex-col h-full shrink-0 shadow-sm font-sans">
+    <aside className={`w-80 border-r flex flex-col h-full shrink-0 shadow-sm font-sans transition-colors duration-200 ${
+      theme === "light"
+        ? "bg-slate-50 border-slate-200 text-slate-800"
+        : "bg-slate-900 border-slate-800 text-slate-100"
+    }`}>
       {/* Sidebar Header */}
-      <div className="p-4 border-b border-slate-200 bg-white flex items-center justify-between">
+      <div className={`p-4 border-b flex items-center justify-between ${
+        theme === "light"
+          ? "bg-white border-slate-200"
+          : "bg-slate-900 border-slate-800"
+      }`}>
         <div className="flex items-center space-x-2">
           <Database className="w-5 h-5 text-indigo-600 animate-pulse" />
           <div>
-            <h1 className="text-sm font-bold text-slate-800 tracking-tight leading-none">Geo Spatial Server</h1>
-            <span className="text-[10px] text-slate-500 font-medium">MongoDB Database</span>
+            <h1 className={`text-sm font-bold tracking-tight leading-none ${theme === "light" ? "text-slate-800" : "text-slate-100"}`}>Geo Spatial Server</h1>
+            <span className={`text-[10px] font-medium ${theme === "light" ? "text-slate-500" : "text-slate-400"}`}>MongoDB Database</span>
           </div>
         </div>
         <div className="flex items-center gap-1.5">

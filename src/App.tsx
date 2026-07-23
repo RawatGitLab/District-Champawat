@@ -3,6 +3,7 @@ import { GisFeature, LayerConfig, BaseMap } from "./types";
 import Sidebar from "./components/Sidebar";
 import MapComponent from "./components/MapComponent";
 import AttributeTable from "./components/AttributeTable";
+import Login from "./components/Login";
 import { 
   Database, 
   Layers, 
@@ -16,10 +17,27 @@ import {
   Sparkles, 
   Info,
   ServerCrash,
-  RefreshCw
+  RefreshCw,
+  LogOut,
+  Sun,
+  Moon
 } from "lucide-react";
 
 export default function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    return sessionStorage.getItem("isGeoportalAuthenticated") === "true";
+  });
+
+  const [theme, setTheme] = useState<"light" | "dark">("light");
+
+  useEffect(() => {
+    if (theme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [theme]);
+
   const [features, setFeatures] = useState<GisFeature[]>([]);
   const [layers, setLayers] = useState<LayerConfig[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -319,6 +337,11 @@ function hslToHex(h: number, s: number, l: number): string {
     });
   };
 
+  const handleLogout = () => {
+    sessionStorage.removeItem("isGeoportalAuthenticated");
+    setIsAuthenticated(false);
+  };
+
   const handleResetToExtent = () => {
     setSelectedFeature(null);
     setHoveredFeature(null);
@@ -343,50 +366,84 @@ function hslToHex(h: number, s: number, l: number): string {
   };
 
   return (
-    <div className="flex flex-col h-screen w-screen bg-slate-100 overflow-hidden font-sans">
+    <div className={`flex flex-col h-screen w-screen overflow-hidden font-sans ${theme === "light" ? "bg-slate-50 text-slate-900" : "bg-slate-950 text-slate-100"}`}>
       {/* Visual Navigation Header */}
-      <header className="h-14 bg-slate-900 text-slate-100 px-4 flex items-center justify-between border-b border-slate-950 shrink-0 select-none shadow-md">
+      <header className="relative z-[110] h-14 px-4 flex items-center justify-between border-b border-slate-950 bg-slate-900 text-slate-100 shrink-0 select-none shadow-md">
         <div className="flex items-center space-x-3">
           <div className="bg-indigo-600 p-1.5 rounded-lg text-white shadow-sm flex items-center justify-center">
             <Compass className="w-5 h-5 text-indigo-100" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-sm font-extrabold tracking-tight text-white uppercase">Geography For District Planners/Administrators</span>
-              <span className="text-[10px] bg-emerald-500/20 text-emerald-300 font-bold px-1.5 py-0.5 rounded border border-emerald-500/30 animate-pulse">
+              <span className="text-sm font-extrabold tracking-tight uppercase text-white">
+                Geography For District Planners/Administrators
+              </span>
+              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded border animate-pulse bg-emerald-500/20 text-emerald-300 border-emerald-500/30">
                 Live Server
               </span>
             </div>
-            <h2 className="text-base font-bold tracking-tight text-slate-200">District Champawat</h2>
+            <h2 className="text-base font-bold tracking-tight text-slate-200">
+              District Champawat
+            </h2>
           </div>
         </div>
 
         {/* Global summary specs */}
-        <div className="flex items-center space-x-3 text-xs font-semibold text-slate-300">
+        <div className="flex items-center space-x-2.5 text-xs font-semibold">
+          {/* Theme Toggle Icon Button */}
+          <button
+            onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+            className="p-1.5 rounded-lg border transition duration-150 cursor-pointer flex items-center justify-center bg-slate-800 hover:bg-slate-700 border-slate-700 text-slate-200 shadow-sm"
+            title={theme === "light" ? "Switch to Dark Theme" : "Switch to Light Theme"}
+          >
+            {theme === "light" ? (
+              <Moon className="w-4 h-4 text-slate-300" />
+            ) : (
+              <Sun className="w-4 h-4 text-amber-400" />
+            )}
+          </button>
+
           <button
             onClick={() => fetchFeatures(true)}
             disabled={loading}
-            className="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 disabled:bg-indigo-800/40 text-white font-extrabold px-3 py-1.5 rounded-lg text-xs shadow-md transition duration-150 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed select-none"
+            className="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 disabled:bg-indigo-800/40 text-white font-extrabold px-3 py-1.5 rounded-lg text-xs shadow-sm transition duration-150 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed select-none"
             title="Force reload all GIS layers from live MongoDB Atlas database"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
             <span>Sync Database</span>
           </button>
-          <div className="hidden md:flex items-center gap-1.5 bg-slate-800 px-2.5 py-1.5 rounded-md">
+          
+          <div className="hidden md:flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border bg-slate-800 border-slate-700/60 text-slate-300">
             <Layers className="w-3.5 h-3.5 text-indigo-400" />
             <span>Layers: <strong className="text-white font-mono">{layers.length}</strong></span>
           </div>
-          <div className="hidden md:flex items-center gap-1.5 bg-slate-800 px-2.5 py-1.5 rounded-md">
+          
+          <div className="hidden md:flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border bg-slate-800 border-slate-700/60 text-slate-300">
             <Database className="w-3.5 h-3.5 text-pink-400" />
             <span>Entities: <strong className="text-white font-mono">{features.length}</strong></span>
           </div>
+
+          {isAuthenticated && (
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-1.5 font-semibold px-2.5 py-1.5 rounded-md text-xs border border-red-600 bg-red-600 hover:bg-red-700 text-white shadow-sm transition duration-150 cursor-pointer ml-1"
+              title="Sign Out from Geoportal"
+            >
+              <LogOut className="w-3.5 h-3.5 text-white" />
+              <span className="hidden sm:inline">Sign Out</span>
+            </button>
+          )}
         </div>
       </header>
 
       {/* Main Core GIS Workspace Layout */}
       <main className="flex-1 flex overflow-hidden min-h-0 relative">
+        {/* Transparent Login Overlay when not authenticated */}
+        {!isAuthenticated && (
+          <Login theme={theme} onLoginSuccess={() => setIsAuthenticated(true)} />
+        )}
         {loading ? (
-          <div className="absolute inset-x-0 inset-y-0 bg-slate-900/90 backdrop-blur-sm flex flex-col items-center justify-center z-50 p-6 select-none font-sans">
+          <div className="absolute inset-x-0 inset-y-0 bg-slate-900/90 flex flex-col items-center justify-center z-50 p-6 select-none font-sans">
             <div className="bg-slate-800 border border-slate-700/80 p-8 rounded-2xl shadow-2xl flex flex-col items-center max-w-sm text-center">
               <div className="h-12 w-12 rounded-full bg-indigo-500/10 flex items-center justify-center mb-4">
                 <Loader2 className="w-6 h-6 text-indigo-500 animate-spin" />
@@ -441,6 +498,7 @@ function hslToHex(h: number, s: number, l: number): string {
               setIsCollapsed={setIsSidebarCollapsed}
               onZoomToLayer={setZoomToLayerName}
               toggleAllLayers={toggleAllLayers}
+              theme={theme}
               measureMode={measureMode}
               setMeasureMode={setMeasureMode}
               measurePoints={measurePoints}
@@ -466,6 +524,7 @@ function hslToHex(h: number, s: number, l: number): string {
               zoomToLayerName={zoomToLayerName}
               clearZoomToLayer={() => setZoomToLayerName(null)}
               toggleLayer={toggleLayer}
+              theme={theme}
             />
 
             {/* Right Pane Attribute Table */}
@@ -477,6 +536,7 @@ function hslToHex(h: number, s: number, l: number): string {
               isCollapsed={isTableCollapsed}
               setIsCollapsed={setIsTableCollapsed}
               onRefresh={() => fetchFeatures(true)}
+              theme={theme}
             />
           </>
         )}
