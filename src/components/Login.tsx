@@ -12,8 +12,8 @@ export default function Login({ onLoginSuccess, theme = "light" }: LoginProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const envUsername = import.meta.env.VITE_GEOPORTAL_USERNAME || "champawatgeoportal";
-  const envPassword = import.meta.env.VITE_GEOPORTAL_PASSWORD || "giscell5605";
+  const envUsername = import.meta.env.VITE_GEOPORTAL_USERNAME;
+  const envPassword = import.meta.env.VITE_GEOPORTAL_PASSWORD;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
