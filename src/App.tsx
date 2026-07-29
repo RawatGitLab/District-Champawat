@@ -43,7 +43,7 @@ export default function App() {
   const [error, setError] = useState<string | null>(null);
 
   // Map & Interaction state
-  const [activeBaseMap, setActiveBaseMap] = useState<string>("satellite");
+  const [activeBaseMap, setActiveBaseMap] = useState<string>("osm");
   const [selectedFeature, setSelectedFeature] = useState<GisFeature | null>(null);
   const [hoveredFeature, setHoveredFeature] = useState<GisFeature | null>(null);
   const [isTableCollapsed, setIsTableCollapsed] = useState<boolean>(true);
@@ -239,7 +239,7 @@ function hslToHex(h: number, s: number, l: number): string {
       const lowerName = name.toLowerCase();
 
       if (type === "polygon") {
-        color = "#ffffff"; // White boundary color for all polygons
+        color = "#000000"; // Black boundary color for all polygons
         fillColor = "transparent";
         weight = 2.5;
         opacity = 0.95;
@@ -354,7 +354,7 @@ function hslToHex(h: number, s: number, l: number): string {
         ...l, 
         visible: isDistrictBoundary, 
         opacity: 0.95,
-        color: isPolygon ? "#ffffff" : l.color,
+        color: isPolygon ? "#000000" : l.color,
         fillOpacity: isPolygon ? 0 : l.fillOpacity
       };
     }));
@@ -382,7 +382,7 @@ function hslToHex(h: number, s: number, l: number): string {
               </span>
             </div>
             <h2 className="text-base font-bold tracking-tight text-slate-200">
-              District Champawat
+              District Champawat [Code: 065]
             </h2>
           </div>
         </div>
